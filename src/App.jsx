@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import { v4 as uuidv4 } from 'uuid';
@@ -7,6 +7,35 @@ function App() {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
   const [editing, setEditing] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+
+  const saveLocalestorage = () => {
+    localStorage.setItem("todos",JSON.stringify(todos));
+  }
+
+  // localStorage.setItem('todos',todos);
+  // localStorage.clear();
+  useEffect(() => {
+    let stodos = JSON.parse(localStorage.getItem("todos"));
+    console.log(stodos);
+    if(stodos){
+      // setTodos(JSON.parse(localStorage.getItem("todos")));
+      setTodos(stodos);
+
+    }
+    setIsInitialLoad(false); // Set to false after initial load
+
+  }, []);   
+
+  useEffect(()=>{
+    if (!isInitialLoad) {
+
+    localStorage.setItem("todos",JSON.stringify(todos));
+    console.log(JSON.parse(localStorage.getItem("todos")));
+  }
+
+  }, [todos, isInitialLoad]);
 
   const handleChange = (e) => {
     setTodo(e.target.value);
@@ -14,13 +43,15 @@ function App() {
 
   const handleAdd = () => {
     // console.log(todo);
-    if(todo === ""){
+    if(todo === "" || todo.trim() === ""){
       alert("Enter Task!");
     }else{    
       setTodos([...todos, {id:uuidv4(), todo, isCompleted: false }]);
       setEditing(false);
-      console.log(todos);
+      // console.log(todos);
       setTodo("");
+      saveLocalestorage();
+      console.log(JSON.parse(localStorage.getItem("todos")));
     }
   };
 
@@ -39,6 +70,7 @@ function App() {
     let uptodos = ([...todos]);
     uptodos[index].isCompleted = !uptodos[index].isCompleted;
     setTodos(uptodos);
+    saveLocalestorage();
     // console.log(uptodos, todos);
 
 
@@ -58,6 +90,7 @@ function App() {
       return item.id !== id;
     })
     setTodos(upttodo);
+    saveLocalestorage();
    };
 
   const handleDelete = (e, id) => { 
@@ -74,6 +107,7 @@ function App() {
       })
       // console.log(uptodos);
       setTodos(uptodos);
+      saveLocalestorage();
 
     }
 
@@ -111,7 +145,7 @@ function App() {
               return (
                 <div className="p-2 flex justify-between border-b" key={item.id}>
                   <div className="flex justify-start gap-1">                  
-                  <input type="checkbox" value={item.isCompleted} name="" id={item.id} onChange={handleCheck}/>
+                  <input type="checkbox" checked={item.isCompleted} value={item.isCompleted} name="" id={item.id} onChange={handleCheck}/>
                   <span className={item.isCompleted ? "line-through p-1 text-lg" : "p-1 text-lg"}>{item.todo}</span>
                   </div>
                   <div className="flex self-start">
