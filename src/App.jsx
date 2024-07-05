@@ -18,11 +18,10 @@ function App() {
   // localStorage.clear();
   useEffect(() => {
     let stodos = JSON.parse(localStorage.getItem("todos"));
-    console.log(stodos);
+    // console.log(stodos);
     if(stodos){
       // setTodos(JSON.parse(localStorage.getItem("todos")));
       setTodos(stodos);
-
     }
     setIsInitialLoad(false); // Set to false after initial load
 
@@ -32,7 +31,7 @@ function App() {
     if (!isInitialLoad) {
 
     localStorage.setItem("todos",JSON.stringify(todos));
-    console.log(JSON.parse(localStorage.getItem("todos")));
+    // console.log(JSON.parse(localStorage.getItem("todos")));
   }
 
   }, [todos, isInitialLoad]);
@@ -51,7 +50,7 @@ function App() {
       // console.log(todos);
       setTodo("");
       saveLocalestorage();
-      console.log(JSON.parse(localStorage.getItem("todos")));
+      // console.log(JSON.parse(localStorage.getItem("todos")));
     }
   };
 
@@ -72,8 +71,6 @@ function App() {
     setTodos(uptodos);
     saveLocalestorage();
     // console.log(uptodos, todos);
-
-
   }
 
   const handleEdit = (e, id) => {
@@ -85,7 +82,7 @@ function App() {
     setTodo(todos[index].todo);
     setEditing(true);
 
-    console.log(index);
+    // console.log(index);
     let upttodo = todos.filter(item=>{
       return item.id !== id;
     })
@@ -108,9 +105,7 @@ function App() {
       // console.log(uptodos);
       setTodos(uptodos);
       saveLocalestorage();
-
     }
-
   };
 
   return (
